@@ -5,14 +5,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import static org.junit.Assert.assertEquals;
 
 public class TestBase {
     static WebDriver driver;
@@ -29,7 +26,7 @@ public class TestBase {
         driver.get(baseUrl);
         driver.findElement(By.cssSelector("[type=submit]")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, 4);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#notices")));
     }
 
@@ -43,24 +40,4 @@ public class TestBase {
         driver.get(baseUrl);
     }
 
-    boolean isElementPresent(WebDriver driver, By locator){
-        try {
-            driver.findElement(locator);
-            return true;
-        } catch (NoSuchElementException ex) {
-            return false;
-        }
-    }
-
-    public void checkIfDisplayed(By locator){
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-       // assertEquals(true, driver.findElement(locator).isDisplayed());
-    }
-
-    public void clickElement(By locator){
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-        driver.findElement(locator).click();
-    }
 }
