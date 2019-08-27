@@ -1,3 +1,4 @@
+// First variant
 package net.litecart.demo;
 
 
@@ -6,7 +7,7 @@ import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertTrue;
 
-public class AdminPageTest extends TestBase{
+public class AdminPageFirst extends TestBase{
 
     @Test
     public void testAppearance(){

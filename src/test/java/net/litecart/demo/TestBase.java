@@ -1,3 +1,4 @@
+//Settings
 package net.litecart.demo;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
