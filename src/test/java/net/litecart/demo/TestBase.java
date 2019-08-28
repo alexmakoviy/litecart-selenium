@@ -17,7 +17,7 @@ public class TestBase {
     static String baseUrl = "http://demo.litecart.net/admin/";
 
     @BeforeClass
-    public static void startBrowser() throws InterruptedException {
+    public static void startBrowser(){
         WebDriverManager.chromedriver().setup();
 
         ChromeOptions options = new ChromeOptions();
