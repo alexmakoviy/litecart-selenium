@@ -12,16 +12,16 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class TestBase {
+public class TestBase{
     static WebDriver driver;
     static String baseUrl = "http://demo.litecart.net/admin/";
 
     @BeforeClass
     public static void startBrowser(){
         WebDriverManager.chromedriver().setup();
-
         ChromeOptions options = new ChromeOptions();
         options.addArguments("start-maximized");
+
         driver = new ChromeDriver(options);
 
         driver.get(baseUrl);
