@@ -8,14 +8,16 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.Select;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -24,14 +26,31 @@ public class HomeTask3 {
     EventFiringWebDriver driver;
     static String url = "http://demo.litecart.net///";
 
+    public static final String USERNAME = "alex8790";
+    public static final String AUTOMATE_KEY = "xj4zntf6ex2SDpx94Pxd";
+    public static final String URL = "https://" + USERNAME + ":" + AUTOMATE_KEY + "@hub-cloud.browserstack.com/wd/hub";
+
     @Before
-    public void start() {
+    public void start() throws MalformedURLException {
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability("browser", "Chrome");
+        caps.setCapability("browser_version", "76.0");
+        caps.setCapability("os", "Windows");
+        caps.setCapability("os_version", "10");
+        caps.setCapability("resolution", "1920x1080");
+        caps.setCapability("name", "Bstack-[Java] Sample Test");
+
+        //WebDriver driver = new RemoteWebDriver(new URL(URL), caps);
         WebDriverManager.chromedriver().setup();
+        driver = new EventFiringWebDriver(new RemoteWebDriver(new URL(URL), caps));
+        driver.register(new EventListener());
+
+       /* WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("start-maximized");
 
         driver = new EventFiringWebDriver(new ChromeDriver(options));
-        driver.register(new EventListener());
+        driver.register(new EventListener());*/
 
         driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
 
