@@ -64,7 +64,7 @@ public class HomeTask3 {
         WebDriverWait wait = new WebDriverWait(driver, 4);
 
         List<WebElement> products = getProducts();      //get list of popular products
-        int productsCount = products.size();            //get number of product
+        int productsCount = products.size();
 
         for (int i=0; i<productsCount; i++){            //loop for opening each popular product in new browser tab, adding it into a cart and close that tab
             String originalW = driver.getWindowHandle();
@@ -72,10 +72,10 @@ public class HomeTask3 {
 
             String link = products.get(i).findElement(By.cssSelector(".link")).getAttribute("href");        // getting a link of current popular product
 
-            driver.executeScript("window.open()");          // opening new browser tab
+            driver.executeScript("window.open()");
             String newW = wait.until(anyWindowOtherThan(existWs));
             driver.switchTo().window(newW);
-            driver.get(link);           //opening product's link in a new browser tab
+            driver.get(link);
 
             if(isSizeListDisplayed()){    // check if dropdown list is displayed, if yes - select Small
                 selectSize(1);
@@ -89,11 +89,11 @@ public class HomeTask3 {
                                                  driver,
                                                 5 );
             driver.close();
-            driver.switchTo().window(originalW);            // go to original tab
+            driver.switchTo().window(originalW);
         }
     }
 
-    private ExpectedCondition<String> anyWindowOtherThan(Set<String> windows) {         // wait until new tab will be opened
+    private ExpectedCondition<String> anyWindowOtherThan(Set<String> windows) {
         return new ExpectedCondition<String>() {
             public String apply(WebDriver input) {
                 Set<String> handles = driver.getWindowHandles();
@@ -119,28 +119,28 @@ public class HomeTask3 {
         else return false;
     }
 
-    private void goToCart() {           // opening cart
+    private void goToCart() {
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#cart"))).click();
     }
 
-    private void deleteFromCart() {         // deleting products from cart
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+    private void deleteFromCart() {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-id]")));       // wait until list will be loaded
 
         List<WebElement> cartProducts = driver.findElements(By.cssSelector("[data-id]"));       // get list of products in cart
-        int counter = cartProducts.size();          // number of elements in cart - needed for counter in delete loop
+        int counter = cartProducts.size();
 
         System.out.println("number of elements in cart: " + cartProducts.size());
 
         for (int i=0; i<counter; i++){          // deleting elements one by one from cart
             driver.findElement(By.cssSelector("[name=remove_cart_item]")).click();
             wait.until(ExpectedConditions.invisibilityOf(cartProducts.get(0)));     // wait until elements will be redrawn on the page
-            cartProducts = driver.findElements(By.cssSelector("[data-id]"));        // get the new list of elements
+            cartProducts = driver.findElements(By.cssSelector("[data-id]"));
         }
 
         Assert.assertEquals(
-                            driver.findElement(By.cssSelector(("#box-checkout em"))).getAttribute("textContent"),       // assert that all elements were deleted
+                            driver.findElement(By.cssSelector(("#box-checkout em"))).getAttribute("textContent"),
                            "There are no items in your cart.");
     }
 
