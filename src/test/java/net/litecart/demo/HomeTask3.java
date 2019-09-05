@@ -63,31 +63,37 @@ public class HomeTask3 {
     private void addPopularToCart() {
         WebDriverWait wait = new WebDriverWait(driver, 4);
 
-        List<WebElement> products = getProducts();
-        int productsCount = products.size();
+        List<WebElement> products = getProducts();      //get list of popular products
+        int productsCount = products.size();            //get number of product
 
-        for (int i=0; i<productsCount; i++){
+        for (int i=0; i<productsCount; i++){            //loop for opening each popular product in new browser tab, adding it into a cart and close that tab
             String originalW = driver.getWindowHandle();
             Set<String> existWs = driver.getWindowHandles();
 
-            String link = products.get(i).findElement(By.cssSelector(".link")).getAttribute("href");
+            String link = products.get(i).findElement(By.cssSelector(".link")).getAttribute("href");        // getting a link of current popular product
 
-            driver.executeScript("window.open()");
+            driver.executeScript("window.open()");          // opening new browser tab
             String newW = wait.until(anyWindowOtherThan(existWs));
             driver.switchTo().window(newW);
-            driver.get(link);
+            driver.get(link);           //opening product's link in a new browser tab
 
-            if(isSizeListDisplayed()){
+            if(isSizeListDisplayed()){    // check if dropdown list is displayed, if yes - select Small
                 selectSize(1);
             }
-            driver.findElement(By.cssSelector("[name=add_cart_product]")).click();
-            waitForElementAttributeEqualsString(driver.findElement(By.cssSelector("[class='badge quantity']")), "textContent", String.valueOf(i+1), driver, 5 );
+
+            driver.findElement(By.cssSelector("[name=add_cart_product]")).click();          // adding product to a cart
+            waitForElementAttributeEqualsString(                                                                    // wait until cart counter will be changed
+                                                 driver.findElement(By.cssSelector("[class='badge quantity']")),
+                                                "textContent",
+                                                 String.valueOf(i+1),
+                                                 driver,
+                                                5 );
             driver.close();
-            driver.switchTo().window(originalW);
+            driver.switchTo().window(originalW);            // go to original tab
         }
     }
 
-    private ExpectedCondition<String> anyWindowOtherThan(Set<String> windows) {
+    private ExpectedCondition<String> anyWindowOtherThan(Set<String> windows) {         // wait until new tab will be opened
         return new ExpectedCondition<String>() {
             public String apply(WebDriver input) {
                 Set<String> handles = driver.getWindowHandles();
@@ -97,45 +103,48 @@ public class HomeTask3 {
         };
     }
 
-    private void selectSize(int i) {
+    private void selectSize(int i) {            // selecting Size value in dropdown list
         Select drpSize = new Select(driver.findElement(By.cssSelector("[name = 'options[Size]']")));
         drpSize.selectByIndex(i);
     }
 
-    private List<WebElement> getProducts() {
+    private List<WebElement> getProducts() {            // return list of popular products on main page
         return driver.findElements(By.cssSelector("#box-popular-products .product-column"));
     }
 
-    private boolean isSizeListDisplayed() {
+    private boolean isSizeListDisplayed() {         // check if dropdown list is displayed
         if (driver.findElements(By.cssSelector(".select-wrapper")).size() > 0){
             return true;
         }
         else return false;
     }
 
-    private void goToCart() {
+    private void goToCart() {           // opening cart
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#cart"))).click();
     }
 
-    private void deleteFromCart() {
+    private void deleteFromCart() {         // deleting products from cart
         WebDriverWait wait = new WebDriverWait(driver, 5);
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-id]")));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-id]")));       // wait until list will be loaded
 
-        List<WebElement> cartProducts = driver.findElements(By.cssSelector("[data-id]"));
-        int counter = cartProducts.size();
+        List<WebElement> cartProducts = driver.findElements(By.cssSelector("[data-id]"));       // get list of products in cart
+        int counter = cartProducts.size();          // number of elements in cart - needed for counter in delete loop
+
         System.out.println("number of elements in cart: " + cartProducts.size());
 
-        for (int i=0; i<counter; i++){
+        for (int i=0; i<counter; i++){          // deleting elements one by one from cart
             driver.findElement(By.cssSelector("[name=remove_cart_item]")).click();
-            wait.until(ExpectedConditions.invisibilityOf(cartProducts.get(0)));
-            cartProducts = driver.findElements(By.cssSelector("[data-id]"));
+            wait.until(ExpectedConditions.invisibilityOf(cartProducts.get(0)));     // wait until elements will be redrawn on the page
+            cartProducts = driver.findElements(By.cssSelector("[data-id]"));        // get the new list of elements
         }
 
-        Assert.assertEquals(driver.findElement(By.cssSelector(("#box-checkout em"))).getAttribute("textContent"),"There are no items in your cart.");
+        Assert.assertEquals(
+                            driver.findElement(By.cssSelector(("#box-checkout em"))).getAttribute("textContent"),       // assert that all elements were deleted
+                           "There are no items in your cart.");
     }
 
-    public void waitForElementAttributeEqualsString(WebElement element, String attribute, String expectedString,
+    public void waitForElementAttributeEqualsString(WebElement element, String attribute, String expectedString,        // wait for checking when badge will be changed on a cart
                                                     WebDriver driver, int specifiedTimeout) {
         WebDriverWait wait = new WebDriverWait(driver, specifiedTimeout);
         ExpectedCondition<Boolean> elementAttributeEqualsString = arg0 -> element.getAttribute(attribute).equals
