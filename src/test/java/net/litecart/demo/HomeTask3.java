@@ -40,20 +40,11 @@ public class HomeTask3 {
         caps.setCapability("resolution", "1920x1080");
         caps.setCapability("name", "Bstack-[Java] Sample Test");
 
-        //WebDriver driver = new RemoteWebDriver(new URL(URL), caps);
         WebDriverManager.chromedriver().setup();
         driver = new EventFiringWebDriver(new RemoteWebDriver(new URL(URL), caps));
         driver.register(new EventListener());
 
-       /* WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
-
-        driver = new EventFiringWebDriver(new ChromeDriver(options));
-        driver.register(new EventListener());*/
-
         driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
-
         driver.get(url);
     }
 
